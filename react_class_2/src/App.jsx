@@ -72,6 +72,18 @@ import { useState, useEffect, use } from 'react'
           const[count2 , setCount2] = useState(0)
 
 
+          // tabs analogy 
+          const [currentTab , SetcurrentTab] = useState("home")
+
+
+          useEffect(()=>{
+            // connect to the current tab backend
+            return function(){
+              
+              // DISconnect from last tabs server
+            }
+          },[currentTab])
+
           function increase(){
             setCount(c => c + 1)
           }
