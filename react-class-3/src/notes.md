@@ -687,3 +687,4 @@ Example:
 - Uses `componentDidCatch()` for logging.
 - Displays a **fallback UI** when an error occurs.
 - Renders children normally when there is no error.
+- end of class 3 
