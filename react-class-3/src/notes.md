@@ -274,3 +274,416 @@ or directly:
 ```jsx
 function Card({ children }) {}
 ```
+
+# React Error Boundary - Summary
+
+## What is an Error Boundary?
+
+An **Error Boundary** is a special **React class component** that catches JavaScript errors in its child components and displays a **fallback UI** instead of crashing the entire application.
+
+---
+
+# Why use an Error Boundary?
+
+Without an Error Boundary:
+
+```
+Child Component Crashes
+        │
+        ▼
+Entire React App Crashes ❌
+```
+
+With an Error Boundary:
+
+```
+Child Component Crashes
+        │
+        ▼
+Error Boundary Catches Error
+        │
+        ▼
+Shows Fallback UI ✅
+```
+
+---
+
+# Basic Structure
+
+```jsx
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hasError: false
+    };
+  }
+
+  static getDerivedStateFromError(error) {
+    return {
+      hasError: true
+    };
+  }
+
+  componentDidCatch(error, info) {
+    console.log(error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children;
+  }
+}
+```
+
+---
+
+# Understanding Every Part
+
+## 1. Extending React.Component
+
+```jsx
+class ErrorBoundary extends React.Component
+```
+
+Creates a **class component**.
+
+> Error Boundaries only work with **class components**.
+
+---
+
+## 2. Constructor
+
+```jsx
+constructor(props){
+    super(props);
+}
+```
+
+Runs when the component is created.
+
+Receives props from the parent.
+
+---
+
+## 3. super(props)
+
+```jsx
+super(props);
+```
+
+Calls the constructor of `React.Component`.
+
+Required before using:
+
+- `this`
+- `this.state`
+- `this.props`
+
+---
+
+## 4. State
+
+```jsx
+this.state = {
+    hasError: false
+}
+```
+
+Initial state.
+
+```
+false
+```
+
+means:
+
+> No child component has crashed.
+
+---
+
+## 5. getDerivedStateFromError()
+
+```jsx
+static getDerivedStateFromError(error)
+```
+
+Special lifecycle method.
+
+Runs automatically when a child throws an error.
+
+Returns new state.
+
+```jsx
+return {
+    hasError: true
+}
+```
+
+React then re-renders the component.
+
+---
+
+## 6. componentDidCatch()
+
+```jsx
+componentDidCatch(error, info)
+```
+
+Runs after the error is caught.
+
+Useful for:
+
+- Logging errors
+- Sending errors to monitoring services
+- Debugging
+
+Example:
+
+```jsx
+componentDidCatch(error, info){
+    console.log(error);
+    console.log(info);
+}
+```
+
+---
+
+## 7. render()
+
+```jsx
+render(){
+```
+
+Determines what should appear on the screen.
+
+---
+
+## 8. Checking for Errors
+
+```jsx
+if(this.state.hasError){
+    return <h1>Something went wrong.</h1>;
+}
+```
+
+If an error occurred:
+
+Show the fallback UI.
+
+Otherwise:
+
+```jsx
+return this.props.children;
+```
+
+Render the wrapped child components.
+
+---
+
+# What is `this.props.children`?
+
+Example:
+
+```jsx
+<ErrorBoundary>
+    <Counter />
+</ErrorBoundary>
+```
+
+Inside `ErrorBoundary`:
+
+```jsx
+this.props.children
+```
+
+equals
+
+```jsx
+<Counter />
+```
+
+So the render method returns the wrapped component.
+
+---
+
+# What is Fallback UI?
+
+Fallback UI is the **backup screen** shown when a child component crashes.
+
+Example:
+
+```jsx
+return <h1>Something went wrong.</h1>;
+```
+
+Instead of crashing the whole app, React displays this backup UI.
+
+Examples:
+
+- "Something went wrong."
+- "Please refresh the page."
+- Retry button
+- Error illustration
+
+---
+
+# Error Boundary Flow
+
+```
+<App>
+
+      │
+      ▼
+
+<ErrorBoundary>
+
+      │
+      ▼
+
+<Counter />
+
+      │
+      │ throws error
+      ▼
+
+getDerivedStateFromError()
+
+      │
+      ▼
+
+hasError = true
+
+      │
+      ▼
+
+componentDidCatch()
+
+      │
+      ▼
+
+render()
+
+      │
+      ▼
+
+Fallback UI
+```
+
+---
+
+# Common Mistakes
+
+### ❌ Wrong
+
+```jsx
+getDerivedStateFromErro
+```
+
+### ✅ Correct
+
+```jsx
+getDerivedStateFromError
+```
+
+---
+
+### ❌ Wrong
+
+```jsx
+this.props.childern
+```
+
+### ✅ Correct
+
+```jsx
+this.props.children
+```
+
+---
+
+### ❌ Wrong
+
+```jsx
+}
+return this.props.children;
+```
+
+Outside `render()`.
+
+### ✅ Correct
+
+```jsx
+render(){
+    if(this.state.hasError){
+        return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children;
+}
+```
+
+---
+
+# Limitations of Error Boundaries
+
+Error Boundaries **DO NOT** catch errors in:
+
+- Event handlers (`onClick`)
+- `setTimeout()`
+- `setInterval()`
+- Asynchronous code (`async/await`, Promises)
+- Server-side rendering (SSR)
+- Errors inside the Error Boundary itself
+
+---
+
+# Interview Questions
+
+### What is an Error Boundary?
+
+A React class component that catches JavaScript errors in its child components and displays a fallback UI instead of crashing the entire application.
+
+---
+
+### Why must it be a class component?
+
+Because Error Boundaries rely on special lifecycle methods (`getDerivedStateFromError` and `componentDidCatch`), which are only available in class components.
+
+---
+
+### What is a fallback UI?
+
+A backup UI displayed when a child component throws an error.
+
+Example:
+
+```jsx
+<h1>Something went wrong.</h1>
+```
+
+---
+
+### Difference between `getDerivedStateFromError` and `componentDidCatch`
+
+| getDerivedStateFromError | componentDidCatch |
+|--------------------------|-------------------|
+| Updates state | Logs errors |
+| Static method | Instance method |
+| Triggers fallback UI | Used for debugging/reporting |
+| Runs before rendering fallback UI | Runs after the error is caught |
+
+---
+
+# Quick Revision
+
+- Error Boundary catches rendering errors in child components.
+- Prevents the entire React app from crashing.
+- Must be a **class component**.
+- Uses `getDerivedStateFromError()` to update state.
+- Uses `componentDidCatch()` for logging.
+- Displays a **fallback UI** when an error occurs.
+- Renders children normally when there is no error.
