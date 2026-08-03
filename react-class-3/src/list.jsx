@@ -1,6 +1,3 @@
-
-
-
 function App(){
   const todos = [{
     title : "go to gym",
@@ -30,7 +27,3 @@ function Todo({title , done}){
     {title} - {done? "done" : "not done"}
   </div>
 }
-
-
-
-export default App;
