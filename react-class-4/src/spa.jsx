@@ -1,8 +1,8 @@
 
 
-import { BrowserRouter , Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter , Routes, Route, Link, Outlet } from 'react-router-dom'
 
-function App() {
+ function App() {
      
   return <div>
     
@@ -11,23 +11,41 @@ function App() {
 
 
    <BrowserRouter>
-   <Link to="/">ALLEN</Link>
+   
+   
+  < Routes>
+
+          <Route path="/" element={<Layout />}>
+        <Route path="/neet/online-coaching-class-11" element= {<Class11Program/>}/>
+         <Route path="/neet/online-coaching-class-12" element= {<Class12Program/>}/>
+          <Route path="/" element= {<LandingPage/>}/>
+           </Route>
+  </Routes>
+        Footer | Contact Us
+   </BrowserRouter>
+  </div>
+}
+
+function Layout(){
+     return <div style={{backgroundColor: 'cyan', height : "100vh"}}>
+
+      <Link to="/">ALLEN</Link>
     |  
 
     <Link to="/neet/online-coaching-class-11">Class 11th</Link>
     |  
 
     <Link to="/neet/online-coaching-class-12">Class 12th</Link>
-   
-  < Routes>
-        <Route path="/neet/online-coaching-class-11" element= {<Class11Program/>}/>
-         <Route path="/neet/online-coaching-class-12" element= {<Class12Program/>}/>
-          <Route path="/" element= {<LandingPage/>}/>
-  </Routes>
-   </BrowserRouter>
-  </div>
-}
 
+      <div style={{height:"90vh" , backgroundColor:'red'}}> 
+              <Outlet/>
+
+      </div>
+     
+
+    
+     </div>
+}
 
 function LandingPage(){
 
