@@ -1,4 +1,4 @@
-import { useState } from "react";
+ import { useState } from "react";
 
 /**
  * A custom hook packages counter state and its related behavior into one
@@ -19,4 +19,16 @@ function useCounter() {
   return { count, increaseCount };
 }
 
+
+function App() {
+  // Custom hooks let this component reuse stateful behavior with a clean API.
+  const { count, increaseCount } = useCounter();
+
+  return (
+    <div>
+      <button onClick={increaseCount}>Increase</button>
+      <p>Count: {count}</p>
+    </div>
+  );
+}
 export default useCounter;
